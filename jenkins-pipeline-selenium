@@ -1,0 +1,20 @@
+pipeline {
+    agent any 
+    triggers {
+       upstream 'project-2'
+    }
+    
+    stages {
+        stage("Code Checkout") {
+            steps {
+                git changelog: false, credentialsId: 'ForGitHub', poll: false, url: 'https://github.com/sekhar-1995/selenium-finance-me.git'
+            }
+        }
+        
+         stage("Running the Test-Case") {
+            steps {
+                sh 'sudo java -jar subham-finance-me.jar'
+            }
+        }
+    }
+}
