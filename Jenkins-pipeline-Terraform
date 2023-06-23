@@ -1,0 +1,43 @@
+pipeline {
+    agent any 
+    triggers {
+       upstream 'Project-2-selenium'
+    }
+    
+    stages {
+        stage("Code Checkout") {
+            steps {
+                git changelog: false, credentialsId: 'ForGitHub', poll: false, url: 'https://github.com/sekhar-1995/selenium-finance-me.git'
+            }
+        }
+        
+        stage("Initializing") {
+            steps {
+                sh 'terraform init'
+            }
+        }
+        
+        stage("Terraform Fmt") {
+            steps {
+                sh 'terraform fmt'
+            }
+        }
+        
+        stage("Validation") {
+            steps {
+                 sh 'terraform validate'
+            }
+        }
+        
+        stage("Terraform Plan") {
+            steps {
+              sh 'terraform plan'
+            }
+        }
+        stage("Terraform Apply") {
+            steps {
+                sh 'terraform apply --auto-approve'
+            }
+        }
+    }
+}
